@@ -44,6 +44,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         res.json(results);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error });
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
