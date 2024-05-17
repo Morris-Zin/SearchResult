@@ -7,9 +7,10 @@ const path = require('path');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-app.use(express.static('public')); // Serve static files from 'public' folder
+const PORT = process.env.PORT || 3000;
 
-// Endpoint to handle file upload
+app.use(express.static('public'));
+
 app.post('/upload', upload.single('file'), async (req, res) => {
     const filePath = path.join(__dirname, req.file.path);
 
@@ -38,15 +39,15 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         }
 
         await browser.close();
-        await fs.unlink(filePath); // Delete the file after processing
+        await fs.unlink(filePath);
 
         res.json(results);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

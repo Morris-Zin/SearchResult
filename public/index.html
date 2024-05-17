@@ -31,6 +31,10 @@
                 body: formData
             });
 
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const results = await response.json();
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '<h2>Results:</h2>';
@@ -39,6 +43,7 @@
             });
         } catch (error) {
             console.error('Error uploading file:', error);
+            document.getElementById('results').innerHTML = `<p>Error: ${error.message}</p>`;
         }
     });
 </script>
