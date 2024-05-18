@@ -21,7 +21,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            executablePath: process.env.CHROME_BIN || null // Ensure the correct path
+            executablePath: process.env.CHROME_BIN || null
         });
         const page = await browser.newPage();
 
