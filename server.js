@@ -15,10 +15,14 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const filePath = path.join(__dirname, req.file.path);
 
     try {
+        console.log('File uploaded to:', filePath);
         const companyNames = await fs.readFile(filePath, 'utf8');
         const companies = companyNames.split('\n').map(name => name.trim()).filter(name => name);
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            executablePath: process.env.CHROME_BIN || null // Ensure the correct path
+        });
         const page = await browser.newPage();
 
         const results = [];
@@ -34,6 +38,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
                 results.push({ company: companyName, url: firstResult });
             } catch (error) {
+                console.error(`Error processing company ${companyName}:`, error);
                 results.push({ company: companyName, url: 'Failed to retrieve URL' });
             }
         }
@@ -43,8 +48,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
         res.json(results);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error });
+        console.error('Error in /upload:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
