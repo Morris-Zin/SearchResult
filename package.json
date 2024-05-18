@@ -4,11 +4,12 @@
   "description": "My Node.js application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "puppeteer install"
   },
   "dependencies": {
     "express": "^4.17.1",
     "multer": "^1.4.2",
-    "puppeteer": "^19.11.1"
+    "puppeteer": "^19.5.0"
   }
 }
